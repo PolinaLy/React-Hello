@@ -1,23 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import {External} from './External.js';
+import { useState } from 'react';
 
 function App() {
+  const [value, valueChange] = useState(0);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello World!</h1>
+
+      <div>
+        <p className="Text">Хук 1: useState</p>
+        {value}
+        <button onClick={() => valueChange(value + 1)}>
+          Увеличить значение на 1
+        </button>
+      </div>
+    <div><External /></div>
+      
     </div>
   );
 }
