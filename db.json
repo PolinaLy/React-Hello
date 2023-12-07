@@ -1,0 +1,52 @@
+{
+  "logindata": [
+    {
+      "email": "aerv@aef.aer",
+      "password": "wefqewe",
+      "id": 1
+    },
+    {
+      "email": "aerv@aef.aer",
+      "password": "wefqewe",
+      "id": 2
+    },
+    {
+      "email": "aerv@aef.aer",
+      "password": "wefqewe",
+      "id": 3
+    },
+    {
+      "{\"email\":\"drf@aedfr.aedrg\",\"password\":\"aergg\"}": "",
+      "id": 4
+    },
+    {
+      "{\"email\":\"adf@adf.aer\",\"password\":\"WSDEFW\"}": "",
+      "id": 5
+    },
+    {
+      "email": "polya@mail.ru",
+      "password": "12345",
+      "id": 6
+    },
+    {
+      "email": "polinka@mail.ru",
+      "password": "55555",
+      "id": 7
+    },
+    {
+      "email": "wef2@wed.we",
+      "password": "qwefw",
+      "id": 8
+    },
+    {
+      "email": "dfgh@dfg.sr",
+      "password": "dthbtgrt",
+      "id": 9
+    },
+    {
+      "email": "lala@la.la",
+      "password": "112233",
+      "id": 10
+    }
+  ]
+}
