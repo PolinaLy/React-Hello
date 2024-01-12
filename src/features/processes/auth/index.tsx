@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {useForm} from "react-hook-form";
-import axios from "axios";
-import "./LoginPage.css";
+import {asyncFunction} from "./api";
+import {validateEmail} from "./lib";
+import "./style.css";
 
 export function LoginPage () {
   const { register, formState: { errors } } = useForm();
@@ -13,26 +14,14 @@ export function LoginPage () {
   const [passwordResult, setPasswordResult] = useState("");
   const [disabledBtn, setDisabledBtn] = useState(false);
 
-  const validateEmail = (event) => {
-    var regex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-
-        if ((!regex.test(event.target.value)) && (event.target.value.length !== 0)) {
-            setFormValid(false);
-            setEmailValid("Почта написана некорректно");
-        } else {
-            setEmailValid("");
-            setFormValid(true);
-        }
-  };
-
   const handleChange = (e) => {
     const value = e.target.value;
     setData({ ...data, [e.target.name]: value });
   };
 
   const renderResults = (response) => {
-    setEmailResult(["Почта: ",response.data.email]);
-    setPasswordResult(["Пароль: ", response.data.password]);
+    setEmailResult(`Почта: ${response.data.email}`);
+    setPasswordResult(`Пароль: ${response.data.password}`);
     setData({ email: "", password: "" });
   }
 
@@ -43,23 +32,7 @@ export function LoginPage () {
       return setFormValidText("Форма не валидна");
     } else{
       setDisabledBtn(true);
-      async function asyncFunction() {
-        try {
-            const response = await
-            axios
-            .post(process.env.REACT_APP_BFF_URL, userData);
-            setDisabledBtn(false);
-            if (!response) {
-              throw Error(response.statusText);
-            } else {
-              console.log(response.data.email, response.data.password);
-              renderResults(response);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-      }
-        asyncFunction();
+      asyncFunction(userData, setDisabledBtn, renderResults);
     }
   };
 
@@ -67,11 +40,10 @@ export function LoginPage () {
     <div className="LoginPage">
       <h1>Регистрация</h1>
       <form onSubmit={handleSubmit} className="form">
-        <label htmlFor="email">
+        <label>
           Почта
           <input
           type="email"
-          name="email"
           {...register("email", { 
             required: {
               value: true,
@@ -79,12 +51,12 @@ export function LoginPage () {
           }})}
             value={data.email}
             onChange={handleChange}
-            onBlur={validateEmail}           
+            onBlur={(e) => {validateEmail(e, setFormValid, setEmailValid)}}        
           />
         </label>
         <p style={{margin: 0, color: "red"}}>{emailValid}</p>
         {errors.email && 
-        <span style={{ color: "red" }}>{errors.email.message}</span>}
+        <span style={{ color: "red" }}>{`${errors.email.message}`}</span>}
         <label htmlFor="password">
           Пароль
           <input
@@ -103,3 +75,5 @@ export function LoginPage () {
     </div>
   );
 };
+
+export {}
