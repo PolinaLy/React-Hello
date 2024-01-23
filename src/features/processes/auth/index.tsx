@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {useForm} from "react-hook-form";
-import {asyncFunction} from "./api";
+import {sendLoginData} from "./api";
 import {validateEmail} from "./lib";
 import "./style.css";
 
@@ -30,10 +30,20 @@ export function LoginPage () {
     const userData = { email: data.email, password: data.password };
     if (!formValid) {
       return setFormValidText("Форма не валидна");
-    } else{
-      setDisabledBtn(true);
-      asyncFunction(userData, setDisabledBtn, renderResults);
-    }
+    } 
+    setDisabledBtn(true);
+    async function asyncLogin() {
+      try {
+          const response = await sendLoginData(userData);
+          setDisabledBtn(false);
+          if (!response) {
+            throw new Error(response['statusText']);
+          } else {
+            renderResults(response);
+          }
+      } catch (error) {}
+    };
+    asyncLogin ();  
   };
 
   return (
