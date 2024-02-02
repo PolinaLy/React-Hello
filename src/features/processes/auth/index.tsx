@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {useForm} from "react-hook-form";
 import {sendLoginData} from "./api";
-import {validateEmail} from "./lib";
+import {isValidateEmail} from "./lib";
 import "./style.css";
 
 export function LoginPage () {
@@ -25,6 +25,18 @@ export function LoginPage () {
     setData({ email: "", password: "" });
   }
 
+  async function asyncLogin(userData) {
+    try {
+        const response = await sendLoginData(userData);
+        setDisabledBtn(false);
+        if (!response) {
+          throw new Error(response['statusText']);
+        } else {
+          renderResults(response);
+        }
+    } catch (error) {}
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = { email: data.email, password: data.password };
@@ -32,18 +44,7 @@ export function LoginPage () {
       return setFormValidText("Форма не валидна");
     } 
     setDisabledBtn(true);
-    async function asyncLogin() {
-      try {
-          const response = await sendLoginData(userData);
-          setDisabledBtn(false);
-          if (!response) {
-            throw new Error(response['statusText']);
-          } else {
-            renderResults(response);
-          }
-      } catch (error) {}
-    };
-    asyncLogin ();  
+    asyncLogin(userData);  
   };
 
   return (
@@ -61,7 +62,16 @@ export function LoginPage () {
           }})}
             value={data.email}
             onChange={handleChange}
-            onBlur={(e) => {validateEmail(e, setFormValid, setEmailValid)}}        
+            onBlur={(e) => {
+              let emailValid = isValidateEmail(e);
+              if (!emailValid) {
+                  setFormValid(false);
+                  setEmailValid("Почта написана некорректно");
+              } else {
+                  setEmailValid("");
+                  setFormValid(true);
+              }
+            }}        
           />
         </label>
         <p style={{margin: 0, color: "red"}}>{emailValid}</p>
